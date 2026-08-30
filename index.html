@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Universo de Amor</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Екран 1: Чат -->
+  <div id="chat-screen" class="screen">
+    <div class="chat-card">
+      <div class="chat-header">
+        <div class="avatar">❤️</div>
+        <div class="chat-user-info">
+          <h3>Mi Amor</h3>
+          <p>En línea</p>
+        </div>
+      </div>
+      <div class="chat-body">
+        <div class="message received">
+          <p>Tengo algo muy especial guardado para ti... 🎁✨</p>
+        </div>
+        <div class="file-attachment" id="open-file-btn">
+          <div class="file-icon">📁</div>
+          <div class="file-info">
+            <span class="file-name">Para_Ti_Con_Amor.zip</span>
+            <span class="file-size">100 MB • Toca para abrir</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Екран 2: Привітання -->
+  <div id="welcome-screen" class="screen hidden">
+    <div class="welcome-card">
+      <h1>¡Feliz Cumpleaños! 🎉</h1>
+      <p>Bienvenida a tu universo personal de recuerdos y amor.</p>
+      <button id="enter-btn">Entrar al Universo ✨</button>
+    </div>
+  </div>
+
+  <!-- Екран 3: 3D Галактика -->
+  <div id="universe-screen" class="screen hidden">
+    <div id="canvas-container"></div>
+  </div>
+
+  <!-- Модальне вікно для фотографій та відео -->
+  <div id="info-modal" class="modal hidden">
+    <div class="modal-content">
+      <!-- Блок для фото -->
+      <div id="modal-img"></div>
+      <!-- Блок для відео -->
+      <video id="modal-video" controls style="width: 100%; height: 240px; border-radius: 12px; margin-bottom: 15px; display: none; object-fit: cover;"></video>
+      
+      <h2 id="modal-title"></h2>
+      <p id="modal-desc"></p>
+      <button id="close-modal-btn">VOLVER ❤️</button>
+    </div>
+  </div>
+
+  <!-- Скрипти -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="photos.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
