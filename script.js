@@ -14,18 +14,20 @@ document.getElementById('enter-btn').addEventListener('click', () => {
   init3DUniverse();
 });
 
-// 2. ДАНІ КАРТОК (10 елементів: 5 фото та 5 відео)
+// 2. ДАНІ КАРТОК (12 елементів: 6 фото та 6 відео)
 const cardsData = [
-  { title: "Amor de mi Vida", desc: "Nuestro primer recuerdo mágico.", image: photo1, icon: "❤️" },
-  { title: "Momento Especial", desc: "La vez que no parábamos de reír.", video: video1, icon: "🎬" },
-  { title: "Para Siempre", desc: "Un instante inolvidable juntos.", image: photo2, icon: "💕" },
-  { title: "Nuestra Canción", desc: "Bailando bajo las estrellas.", video: video2, icon: "🎵" },
-  { title: "Mi Sol", desc: "Tu sonrisa ilumina mi mundo.", image: photo3, icon: "✨" },
-  { title: "Aventura", desc: "El mejor viaje de nuestras vidas.", video: video3, icon: "✈️" },
-  { title: "Eres Magia", desc: "Contigo todo es mejor.", image: photo4, icon: "🌸" },
-  { title: "Pura Alegría", desc: "Pequeños momentos de gran felicidad.", video: video4, icon: "🎥" },
-  { title: "Nuestro Universo", desc: "Un amor que no tiene fin.", image: photo5, icon: "👑" },
-  { title: "Infinito", desc: "Por muchos más recuerdos como este.", video: video5, icon: "♾️" }
+  { title: "Фора",  image: photo1, icon: "❤️" },
+  { title: "Хмельницький тт", video: video1, icon: "🎬" },
+  { title: "Урок противогази", image: photo2, icon: "💕" },
+  { title: "Луна кава",  video: video2, icon: "🎵" },
+  { title: "Випивка ДО",  image: photo3, icon: "✨" },
+  { title: "Прогулка з Матьохою", video: video3, icon: "✈️" },
+  { title: "Дім офіцерів",  image: photo4, icon: "🌸" },
+  { title: "Осінь листя",  video: video4, icon: "🎥" },
+  { title: "Старий бондар",  image: photo5, icon: "👑" },
+  { title: "Люди-Бумбокс",  video: video5, icon: "♾️" },
+  { title: "Парк",  image: photo6, icon: "💎" },
+  { title: "Especial", video: video6, icon: "⭐" }
 ];
 
 // 3. THREE.JS ГОЛОВНА АНІМАЦІЯ
@@ -37,7 +39,7 @@ function init3DUniverse() {
   const scene = new THREE.Scene();
 
   const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 18, 35);
+  camera.position.set(0, 18, 38);
   camera.lookAt(0, 2, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -48,45 +50,123 @@ function init3DUniverse() {
   const galaxyGroup = new THREE.Group();
   scene.add(galaxyGroup);
 
-  // А. СЕРЦЕ З ЧАСТИНОК
-  const heartCount = 10000;
-  const heartGeo = new THREE.BufferGeometry();
-  const heartPos = new Float32Array(heartCount * 3);
-  const heartColors = new Float32Array(heartCount * 3);
+  // ГРУПА РЕАЛІСТИЧНОЇ САКУРИ
+  const sakuraFlowerGroup = new THREE.Group();
 
-  const colorInner = new THREE.Color(0xff1493);
-  const colorOuter = new THREE.Color(0xffb6c1);
+  // А1. ПЕЛЮСТКИ САКУРИ (ЯСКРАВО-РОЖЕВІ ПЕЛЮСТКИ, ЯК БУЛО РАНІШЕ)
+  const petalCount = 18000;
+  const sakuraGeo = new THREE.BufferGeometry();
+  const sakuraPos = new Float32Array(petalCount * 3);
+  const sakuraColors = new Float32Array(petalCount * 3);
 
-  for (let i = 0; i < heartCount; i++) {
-    let t = Math.PI * (Math.random() * 2 - 1);
-    let x = 16 * Math.pow(Math.sin(t), 3);
-    let y = 13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t);
-    let scale = 0.65;
-    let thickness = (Math.random() - 0.5) * 3.5;
+  const colCenter = new THREE.Color(0xff007f); // Темний рожевий
+  const colMid = new THREE.Color(0xff69b4);    // Яскраво-рожевий
+  const colEdge = new THREE.Color(0xffb6c1);   // Ніжно-рожевий світлий край
 
-    heartPos[i * 3] = x * scale + (Math.random() - 0.5) * 0.5;
-    heartPos[i * 3 + 1] = y * scale + 6 + (Math.random() - 0.5) * 0.5; 
-    heartPos[i * 3 + 2] = thickness;
+  for (let i = 0; i < petalCount; i++) {
+    let angle = Math.random() * Math.PI * 2;
+    
+    // Форма 5 окремих пелюсток з виїмками
+    let petalSector = (angle * 5) % (Math.PI * 2);
+    let petalShape = Math.sin(petalSector / 2);
+    
+    let rMax = 8.0 * Math.pow(petalShape, 0.7);
+    
+    if (Math.abs(petalSector - Math.PI) < 0.2) {
+      rMax *= 0.82;
+    }
 
-    let mixedColor = colorInner.clone().lerp(colorOuter, Math.random());
-    heartColors[i * 3] = mixedColor.r;
-    heartColors[i * 3 + 1] = mixedColor.g;
-    heartColors[i * 3 + 2] = mixedColor.b;
+    let dist = Math.sqrt(Math.random()) * rMax;
+    if (dist < 0.5) dist = 0.5;
+
+    let x = dist * Math.cos(angle);
+    let y = dist * Math.sin(angle);
+
+    let wave = Math.sin(dist * 1.5) * 0.4;
+    let cupShape = Math.pow(dist / 8.0, 1.8) * 2.2;
+    let z = cupShape + wave + (Math.random() - 0.5) * 0.35;
+
+    let noise = (Math.random() - 0.5) * 0.12;
+
+    sakuraPos[i * 3] = x + noise;
+    sakuraPos[i * 3 + 1] = y + noise;
+    sakuraPos[i * 3 + 2] = z + noise;
+
+    // Класичний градієнт пелюсток
+    let normDist = dist / 8.0;
+    let mixedColor;
+
+    if (normDist < 0.2) {
+      mixedColor = colCenter.clone().lerp(colMid, normDist / 0.2);
+    } else {
+      mixedColor = colMid.clone().lerp(colEdge, (normDist - 0.2) / 0.8);
+    }
+
+    sakuraColors[i * 3] = mixedColor.r;
+    sakuraColors[i * 3 + 1] = mixedColor.g;
+    sakuraColors[i * 3 + 2] = mixedColor.b;
   }
 
-  heartGeo.setAttribute('position', new THREE.BufferAttribute(heartPos, 3));
-  heartGeo.setAttribute('color', new THREE.BufferAttribute(heartColors, 3));
+  sakuraGeo.setAttribute('position', new THREE.BufferAttribute(sakuraPos, 3));
+  sakuraGeo.setAttribute('color', new THREE.BufferAttribute(sakuraColors, 3));
 
-  const heartMat = new THREE.PointsMaterial({
-    size: 0.25,
+  const sakuraMat = new THREE.PointsMaterial({
+    size: 0.18,
     vertexColors: true,
     transparent: true,
-    opacity: 0.9,
+    opacity: 0.95,
     blending: THREE.AdditiveBlending
   });
 
-  const heartMesh = new THREE.Points(heartGeo, heartMat);
-  galaxyGroup.add(heartMesh);
+  const sakuraMesh = new THREE.Points(sakuraGeo, sakuraMat);
+  sakuraFlowerGroup.add(sakuraMesh);
+
+  // А2. ТИЧИНКИ ТА ПИЛЯКИ В СЕРЕДИНІ (ЯСКРАВО-РОЖЕВІ)
+  const stamenCount = 800;
+  const stamenGeo = new THREE.BufferGeometry();
+  const stamenPos = new Float32Array(stamenCount * 3);
+  const stamenColors = new Float32Array(stamenCount * 3);
+
+  const colStamenFilament = new THREE.Color(0xff1493); // Яскравий малиново-рожевий
+  const colStamenAnther = new THREE.Color(0xff69b4);   // Насичено-рожевий
+
+  for (let i = 0; i < stamenCount; i++) {
+    let stamenAngle = Math.random() * Math.PI * 2;
+    let stamenRadius = Math.random() * 1.8;
+    let heightProgress = Math.random();
+
+    let x = stamenRadius * Math.cos(stamenAngle) * heightProgress;
+    let y = stamenRadius * Math.sin(stamenAngle) * heightProgress;
+    let z = heightProgress * 2.4;
+
+    stamenPos[i * 3] = x;
+    stamenPos[i * 3 + 1] = y;
+    stamenPos[i * 3 + 2] = z;
+
+    let color = heightProgress > 0.75 ? colStamenAnther : colStamenFilament;
+    stamenColors[i * 3] = color.r;
+    stamenColors[i * 3 + 1] = color.g;
+    stamenColors[i * 3 + 2] = color.b;
+  }
+
+  stamenGeo.setAttribute('position', new THREE.BufferAttribute(stamenPos, 3));
+  stamenGeo.setAttribute('color', new THREE.BufferAttribute(stamenColors, 3));
+
+  const stamenMat = new THREE.PointsMaterial({
+    size: 0.22,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.95,
+    blending: THREE.AdditiveBlending
+  });
+
+  const stamenMesh = new THREE.Points(stamenGeo, stamenMat);
+  sakuraFlowerGroup.add(stamenMesh);
+
+  // Розвертаємо квітку горизонтально
+  sakuraFlowerGroup.rotation.x = -Math.PI / 2;
+  sakuraFlowerGroup.position.y = 0.5;
+  galaxyGroup.add(sakuraFlowerGroup);
 
   // Б. ГАЛАКТИКА
   const galaxyCount = 12000;
@@ -107,14 +187,14 @@ function init3DUniverse() {
     size: 0.18,
     color: 0xff69b4,
     transparent: true,
-    opacity: 0.6,
+    opacity: 0.65,
     blending: THREE.AdditiveBlending
   });
   const galaxyMesh = new THREE.Points(galaxyGeo, galaxyMat);
   galaxyGroup.add(galaxyMesh);
 
   // В. НАПИСИ
-  const labels = ["HAPPY BIRTHDAY", "ERES MAGIA", "MI AMOR ETERNO", "TE ADORO"];
+  const labels = ["Волейбол", "Теніс", "Піаніно", "Пенсія", "Шпиндик", "Обізяна", "Панорама", "Тьома", "Фотосесія"]
 
   function createTextSprite(text) {
     const canvas = document.createElement('canvas');
@@ -124,7 +204,7 @@ function init3DUniverse() {
     ctx.font = 'Bold 30px Arial';
     ctx.fillStyle = '#ffffff';
     ctx.shadowColor = '#ff1493';
-    ctx.shadowBlur = 12;
+    ctx.shadowBlur = 14;
     ctx.textAlign = 'center';
     ctx.fillText(text, 256, 42);
 
@@ -143,7 +223,7 @@ function init3DUniverse() {
     galaxyGroup.add(sprite);
   });
 
-  // Г. 10 САТЕЛІТІВ (по колу для 10 елементів)
+  // Г. 12 САТЕЛІТІВ (ФОТО ТА ВІДЕО)
   const interactiveObjects = [];
 
   cardsData.forEach((data, index) => {
@@ -152,7 +232,7 @@ function init3DUniverse() {
     canvas.width = 128;
     canvas.height = 128;
 
-    ctx.fillStyle = 'rgba(255, 20, 147, 0.9)';
+    ctx.fillStyle = 'rgba(255, 20, 147, 0.95)';
     ctx.beginPath();
     ctx.arc(64, 64, 55, 0, Math.PI * 2);
     ctx.fill();
@@ -170,8 +250,7 @@ function init3DUniverse() {
     const spriteMat = new THREE.SpriteMaterial({ map: texture, transparent: true });
     const sprite = new THREE.Sprite(spriteMat);
 
-    // Змінений радіус для 10 елементів, щоб не перекривали один одного
-    let radius = 12 + (index % 2) * 4; 
+    let radius = 12 + (index % 3) * 3; 
     let angle = (index / cardsData.length) * Math.PI * 2;
 
     sprite.position.set(radius * Math.cos(angle), 1, radius * Math.sin(angle));
@@ -182,7 +261,7 @@ function init3DUniverse() {
     interactiveObjects.push(sprite);
   });
 
-  // Д. КЛІК (РОЗПІЗНАВАННЯ ФОТО ЧИ ВІДЕО)
+  // Д. КЛІК
   const raycaster = new THREE.Raycaster();
   const mouse = new THREE.Vector2();
   const modal = document.getElementById('info-modal');
@@ -225,7 +304,11 @@ function init3DUniverse() {
   function animate() {
     requestAnimationFrame(animate);
     galaxyGroup.rotation.y += 0.003;
-    heartMesh.rotation.y = Math.sin(Date.now() * 0.001) * 0.15;
+    
+    sakuraFlowerGroup.rotation.z += 0.002;
+    let pulse = 1 + Math.sin(Date.now() * 0.0018) * 0.035;
+    sakuraFlowerGroup.scale.set(pulse, pulse, pulse);
+
     renderer.render(scene, camera);
   }
 
